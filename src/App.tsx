@@ -17,22 +17,22 @@ export const goodsFromServer: string[] = [
 ];
 
 enum SortType {
-  NONE = 'none',
-  ALPHABET = 'alphabet',
-  LENGTH = 'length',
+  Default = 'default',
+  Alphabetical = 'alphabetical',
+  Length = 'length',
 }
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<string[]>([...goodsFromServer]);
-  const [sortOrder, setSortOrder] = useState<SortType>(SortType.NONE);
+  const [sortOrder, setSortOrder] = useState<SortType>(SortType.Default);
   const [isReversed, setIsReversed] = useState<boolean>(false);
 
   const applySort = (sortType: SortType) => {
     const sortedGoods = [...goodsFromServer];
 
-    if (sortType === SortType.ALPHABET) {
+    if (sortType === SortType.Alphabetical) {
       sortedGoods.sort((a, b) => a.localeCompare(b));
-    } else if (sortType === SortType.LENGTH) {
+    } else if (sortType === SortType.Length) {
       sortedGoods.sort((a, b) => a.length - b.length);
     }
 
@@ -47,11 +47,11 @@ export const App: React.FC = () => {
 
   const handleReset = () => {
     setGoods([...goodsFromServer]);
-    setSortOrder(SortType.NONE);
+    setSortOrder(SortType.Default);
     setIsReversed(false);
   };
 
-  const isResetButtonVisible = sortOrder !== SortType.NONE || isReversed;
+  const isResetButtonVisible = sortOrder !== SortType.Default || isReversed;
 
   return (
     <div className="section content">
@@ -59,18 +59,18 @@ export const App: React.FC = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortOrder !== SortType.ALPHABET,
+            'is-light': sortOrder !== SortType.Alphabetical,
           })}
-          onClick={() => applySort(SortType.ALPHABET)}
+          onClick={() => applySort(SortType.Alphabetical)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortOrder !== SortType.LENGTH,
+            'is-light': sortOrder !== SortType.Length,
           })}
-          onClick={() => applySort(SortType.LENGTH)}
+          onClick={() => applySort(SortType.Length)}
         >
           Sort by length
         </button>
