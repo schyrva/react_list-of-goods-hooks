@@ -24,10 +24,10 @@ enum SortType {
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<string[]>([...goodsFromServer]);
-  const [sortOrder, setSortOrder] = useState<SortType>(SortType.Default);
+  const [sortField, SetSortField] = useState<SortType>(SortType.Default);
   const [isReversed, setIsReversed] = useState<boolean>(false);
 
-  const applySort = (sortType: SortType) => {
+  const handleSort = (sortType: SortType) => {
     const sortedGoods = [...goodsFromServer];
 
     if (sortType === SortType.Alphabetical) {
@@ -37,7 +37,7 @@ export const App: React.FC = () => {
     }
 
     setGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
-    setSortOrder(sortType);
+    SetSortField(sortType);
   };
 
   const handleReverse = () => {
@@ -47,11 +47,11 @@ export const App: React.FC = () => {
 
   const handleReset = () => {
     setGoods([...goodsFromServer]);
-    setSortOrder(SortType.Default);
+    SetSortField(SortType.Default);
     setIsReversed(false);
   };
 
-  const isResetButtonVisible = sortOrder !== SortType.Default || isReversed;
+  const isResetButtonVisible = sortField !== SortType.Default || isReversed;
 
   return (
     <div className="section content">
@@ -59,18 +59,18 @@ export const App: React.FC = () => {
         <button
           type="button"
           className={cn('button is-info', {
-            'is-light': sortOrder !== SortType.Alphabetical,
+            'is-light': sortField !== SortType.Alphabetical,
           })}
-          onClick={() => applySort(SortType.Alphabetical)}
+          onClick={() => handleSort(SortType.Alphabetical)}
         >
           Sort alphabetically
         </button>
         <button
           type="button"
           className={cn('button is-success', {
-            'is-light': sortOrder !== SortType.Length,
+            'is-light': sortField !== SortType.Length,
           })}
-          onClick={() => applySort(SortType.Length)}
+          onClick={() => handleSort(SortType.Length)}
         >
           Sort by length
         </button>
