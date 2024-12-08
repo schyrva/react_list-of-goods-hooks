@@ -22,32 +22,41 @@ enum SortType {
   Length = 'length',
 }
 
+const prepareGoods = (
+  goods: string[],
+  sortType: SortType,
+  isReversed: boolean,
+): string[] => {
+  const sortedGoods = goods.toSorted((a, b) => {
+    switch (sortType) {
+      case SortType.Alphabetical:
+        return a.localeCompare(b);
+      case SortType.Length:
+        return a.length - b.length;
+      default:
+        return 0;
+    }
+  });
+
+  return isReversed ? sortedGoods.reverse() : sortedGoods;
+};
+
 export const App: React.FC = () => {
-  const [goods, setGoods] = useState<string[]>([...goodsFromServer]);
-  const [sortField, SetSortField] = useState<SortType>(SortType.Default);
+  const [sortField, setSortField] = useState<SortType>(SortType.Default);
   const [isReversed, setIsReversed] = useState<boolean>(false);
 
+  const preparedGoods = prepareGoods(goodsFromServer, sortField, isReversed);
+
   const handleSort = (sortType: SortType) => {
-    const sortedGoods = [...goodsFromServer];
-
-    if (sortType === SortType.Alphabetical) {
-      sortedGoods.sort((a, b) => a.localeCompare(b));
-    } else if (sortType === SortType.Length) {
-      sortedGoods.sort((a, b) => a.length - b.length);
-    }
-
-    setGoods(isReversed ? sortedGoods.reverse() : sortedGoods);
-    SetSortField(sortType);
+    setSortField(sortType);
   };
 
   const handleReverse = () => {
-    setGoods(prevGoods => [...prevGoods].reverse());
     setIsReversed(!isReversed);
   };
 
   const handleReset = () => {
-    setGoods([...goodsFromServer]);
-    SetSortField(SortType.Default);
+    setSortField(SortType.Default);
     setIsReversed(false);
   };
 
@@ -92,7 +101,7 @@ export const App: React.FC = () => {
         )}
       </div>
       <ul>
-        {goods.map(good => (
+        {preparedGoods.map(good => (
           <li key={good} data-cy="Good">
             {good}
           </li>
